@@ -24,7 +24,7 @@ class load_N_predict():
          self.input_size=input_size
          self.output_size=output_size
          self.model_loc=model_loc
-	     self.net_type=net_type
+         self.net_type=net_type
 
     def to_tensor(self, numpy_array):
         return torch.from_numpy(numpy_array).float()

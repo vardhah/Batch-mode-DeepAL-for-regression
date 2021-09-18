@@ -87,8 +87,21 @@ def data_preperation(data,mask,ranges,cat):
          data[:,i]=enc.transform(data[:,i]).toarray()
     return data
       
-update_lbtm(data,size):
+def update_lbtm(data,size):
     return data[0:size,:] 
+
+
+def label_data(test_data,stest_pred):
+      ones=np.ones(stest_pred.shape[0])
+      zeros= np.zeros(stest_pred.shape[0])
+      result = np.where(np.absolute(test_data[:,-1]-stest_pred)/test_data[:,-1] > 0.02,zeros,ones)
+      test_data[:,-1]=result
+      return test_data
+
+def choose_samples(test_data,stest_pred,selection_prob):
+      index = np.where(stest_pred> selection_prob)
+      return test_data[index]
+
 
 def data_split_size(data,size):
       a_list=np.arange(data.shape[0])

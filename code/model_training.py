@@ -32,7 +32,7 @@ class Worker():
         loss_train=[]; loss_validate=[];
         while True:
             #print('self epoch is:',self.epoch)
-            self.trainer.set_id(self.epoch)
+           
             if self.epoch > self.max_epoch:
                 break    
             #checkpoint_path = "checkpoints/task-%03d.pth" % task['id']
@@ -75,7 +75,7 @@ def train_net(training_data,batch_size,max_epoch,device,input_size,output_size,n
        train_data = SimDataset(train_data)
        validation_data= SimDataset(validation_data)
           
-       if type="T":
+       if net_type=="T":
          path='./models/teacher/'+'nnt'+'.pt'
          neuralNet= TNet(input_size,output_size)
          try: 
@@ -85,7 +85,7 @@ def train_net(training_data,batch_size,max_epoch,device,input_size,output_size,n
           neuralNet= neuralNet.apply(initialize_weights)
           print('Randomly initialising weights')
 
-       elif type="S":
+       elif net_type=="S":
          path='./models/student/'+'nns'+'.pt'
          neuralNet= TNet(input_size,output_size)
          try: 
