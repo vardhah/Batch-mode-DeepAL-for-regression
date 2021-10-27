@@ -61,4 +61,23 @@ def random_integer_sampling(n,dim,ranges):
     return samples
 
 
+def random_samples(n):
+    a=np.random.randint(1,100, size=n).reshape(-1,1)
+    b=np.random.randint(1,100, size=n).reshape(-1,1)
+    c=np.random.rand(n,2)*190+10
+    rand_points=np.concatenate((a,b,c),axis=1)
+    return rand_points
+
+
+
+
+def mesh_samples4():
+    xx= np.arange(1,100,2)
+    yy= np.arange(1,100,2)
+    zz= np.arange(10,200,2)
+    aa= np.arange(10,200,2)
+    xv, yv, zv, av= np.meshgrid(xx, yy, zz,aa,sparse=False)
+    positions = np.vstack([xv.ravel(), yv.ravel(), zv.ravel(),av.ravel()]).T
+    print(positions.shape)
+    return positions
 
