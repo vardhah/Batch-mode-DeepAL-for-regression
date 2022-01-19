@@ -2,23 +2,22 @@ import numpy as np
 import pandas as pd
 from numpy import pi
 from pyDOE import *   
-from matlab.engine
+import matlab.engine
 
 
 
 def opensim(x):
     eng = matlab.engine.start_matlab()
     sim_out=[]
-    print('collecting data') 
+    eng.cd(r'/home/hv/harsh/openProp/OpenProp_v3.3.4/SourceCode')
+    print('collecting data', 'shape is:',x.shape[0]) 
     for i in range(x.shape[0]):
-       sim_out.append(eng.OpenProp_eval(matlab.double(x[i]))
+       sim_out.append(eng.OpenProp_eval(matlab.double(x[i].tolist())))
     eng.quit()
-    return sim_out    
+    return np.array(sim_out)    
        
 
-    
-
-
+  
 
 
 def random_sampling(n):
@@ -51,7 +50,7 @@ def random_sampling(n):
   c8_s=np.random.rand(n,1)*(ch-c8)+c8
   c9_e=np.ones((n,1))*c9 
   c10_e=np.ones((n,1))*c10 
-  rand_points=np.concatenate((t_s,rpm_s,s_s,d_s,c1_e,c2_s,c3_s,c4_s,c5_s,c6_s,c7_s,c8_s,c9_e,c10_e),axis=1)
+  rand_points=np.concatenate((t_s,s_s,rpm_s,d_s,c1_e,c2_s,c3_s,c4_s,c5_s,c6_s,c7_s,c8_s,c9_e,c10_e),axis=1)
   print('shape of samples:',rand_points.shape)
   return rand_points
 

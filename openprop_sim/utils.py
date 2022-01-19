@@ -100,6 +100,7 @@ def update_lbtm(data,size):
 
 
 def label_data(data,stest_pred):
+      # create label for data(if predicted vale is >/< 10% of error then it labels it '1' or else it is '0')
       ones=np.ones(stest_pred.shape[0])
       zeros= np.zeros(stest_pred.shape[0])
       #print('test shape:',test_data[:,-1].shape,'zeros shape:',zeros.shape,'ones shape:',ones.shape,'stest shape',stest_pred.flatten().shape)

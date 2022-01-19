@@ -65,9 +65,9 @@ class Worker():
         plt.plot(loss_train,label='train')
         plt.plot(loss_validate,label='validate')
         plt.legend()
-        plt.show(block=False)
-        plt.pause(10)
-        plt.close(fig)
+        plt.show()
+        #plt.pause(10)
+        #plt.close(fig)
         plt.show()
         return loss,validation_error
         #validate
