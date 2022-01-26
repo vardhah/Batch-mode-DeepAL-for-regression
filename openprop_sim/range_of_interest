@@ -1,19 +1,19 @@
-    rpm_range    = 500:6000;                                % set rpm range(50-600 RPM)
-    N            = randsample(rpm_range,1)  ;              % propeller speed [RPM]
-    thrust_range = 100:5000;                          % set required thrust range(1,00-50,00 N)
-    THRUST       = randsample(thrust_range,1)  ;        % Thrust required [Newton]
-    D            = 0.2+0.8*rand ;	                        % set propeller diameter [m] (0.2-10 METER)
-    Vs           = 20*rand ;
-
+    rpm_range    = 100:1000;                            % set rpm range(100-1000 RPM)
+    thrust_range = 1000:50000;                          % set required thrust range(1,00-50,000 N)
+    D            = 0.1-2 ;	                        % set propeller diameter [m] (0.1-2 METER)
+    Vs           = 1-10 ;                               % ser ship velocity 1-10 m/s
+    ch=0.5                                              % highest chord/diameter ratio 
 
     %  Blade 2D section properties ----------------------
-    cod1= 0.16+ 0.34*rand ;
-    cod2= 0.18+ 0.32*rand  ;
-    cod3= 0.20+0.30*rand ;
-    cod4= 0.22+0.28*rand ;
-    cod5= 0.23+0.27*rand ;
-    cod6= 0.23+0.27*rand ;
-    cod7= 0.22+0.28*rand ;
-    cod8= 0.20+0.30*rand ;
-    cod9= 0.13+0.37*rand ; 
-    cod10=0.001; % MAX c/d is 1/4th of diameter	
+    cod1= 0.01 : 0.5 ;
+    cod2= 0.01 : 0.5 ;
+    cod3= 0.01 : 0.5 ;
+    cod4= 0.01 : 0.5 ;
+    cod5= 0.01 : 0.5 ;
+    cod6= 0.01 : 0.5 ;
+    cod7= 0.01 : 0.5 ;
+    cod8= 0.01 : 0.5 ;
+    cod9= 0.01 ;       %constant
+    cod10=0.001        % constant	
+
+

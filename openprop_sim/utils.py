@@ -104,7 +104,7 @@ def label_data(data,stest_pred):
       ones=np.ones(stest_pred.shape[0])
       zeros= np.zeros(stest_pred.shape[0])
       #print('test shape:',test_data[:,-1].shape,'zeros shape:',zeros.shape,'ones shape:',ones.shape,'stest shape',stest_pred.flatten().shape)
-      result = np.where(np.absolute((data[:,-1]-stest_pred.flatten())) > (0.1*np.absolute(data[:,-1])),ones,zeros)
+      result = np.where(np.absolute((data[:,-1]-stest_pred.flatten())) > (0.05*np.absolute(data[:,-1])),ones,zeros)
       data[:,-1]=result
       return data
 
