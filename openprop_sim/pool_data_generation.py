@@ -17,7 +17,7 @@ Axes3D = Axes3D  # pycharm auto import
 import logging
 
 
-total_samples=500000
+total_samples=100000
 
 
 if __name__ == "__main__":
@@ -25,10 +25,10 @@ if __name__ == "__main__":
     if not torch.cuda.is_available():
         device = 'cpu'
     
-    #samples=random_sampling(total_samples)
-    samples= np.loadtxt("./data/pool_data_extended.csv", delimiter=",",skiprows=0, dtype=np.float32)
+    samples=random_sampling(total_samples)
+    #samples= np.loadtxt("./data/pool_data_extended.csv", delimiter=",",skiprows=0, dtype=np.float32)
     f=opensim(samples)
     sim_data=np.concatenate((samples,f.reshape(-1,1)),axis=1)
-    named='./data/pool_data_extended'+'.csv'
+    named='./data/pool_data_search'+'.csv'
     np.savetxt(named, sim_data, delimiter=",")
       

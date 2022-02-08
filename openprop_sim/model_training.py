@@ -18,6 +18,7 @@ class Worker():
         self.device = device
         model = neuraln.to(device)
         self.path=path 
+        self.flag_first=0
 
         optimizer = ul.get_optimizer(model)
         loss_func = ul.get_lossfunc(net_type)
@@ -32,7 +33,7 @@ class Worker():
 
     def run(self):
         # Train
-        loss_train=[]; loss_validate=[];diff_loss=[];min_diff_loss=0
+        loss_train=[]; loss_validate=[];diff_loss=[];min_diff_loss=0; threshold_epoch=10
         while True:
             #print('self epoch is:',self.epoch)
            
@@ -46,29 +47,42 @@ class Worker():
                 break
             loss_train.append(loss)
             self.epoch+=1
+            
             validation_error= self.trainer.eval().cpu()
             loss_validate.append(validation_error)
-            diff_loss=np.absolute(loss-validation_error)
-            if self.epoch==1:
+            
+            if self.epoch <= threshold_epoch:
+               whichmodel=self.epoch  
+               self.save_model(self.path)
+
+            if self.epoch> threshold_epoch:
+             diff_loss=np.absolute(loss-validation_error)
+             if self.flag_first==0: 
                 self.save_model(self.path)
+                whichmodel=self.epoch 
+                self.flag_first=1
                 last_diff_loss=diff_loss
-            elif last_diff_loss>diff_loss:
-                self.save_model(self.path)
-                #print('last saved model at epoch:',self.epoch,'with loss:',diff_loss)
-                last_diff_loss=diff_loss
-            #print('diff loss is:',diff_loss,'last diff loss:',last_diff_loss)   
+
+             elif self.flag_first==1:
+                if last_diff_loss>diff_loss:
+                  self.save_model(self.path); whichmodel=self.epoch ;
+                  last_diff_loss=diff_loss
+            
+               
+               
+        print('-> Saved model is:', whichmodel,' th epoch')   
 
 
         #print('Training loss :',loss,'Validation loss is:',validation_error)
         #print('loss of training:',loss_train)
-        fig=plt.figure(figsize=(9,6))
-        plt.plot(loss_train,label='train')
-        plt.plot(loss_validate,label='validate')
-        plt.legend()
-        plt.show()
+        #fig=plt.figure(figsize=(9,6))
+        #plt.plot(loss_train,label='train')
+        #plt.plot(loss_validate,label='validate')
+        #plt.legend()
+        #plt.show(block=False)
         #plt.pause(10)
         #plt.close(fig)
-        plt.show()
+        #plt.show()
         return loss,validation_error
         #validate
      
@@ -77,12 +91,7 @@ class Worker():
 
 
 
-def save_intermittent_model(model,episode,population):
-        print("Saving intermittent model now...")
-        model_name='./models/'+str(episode)+'/nn'+str(population)+'.pt'
-        torch.save(model.state_dict(), model_name)
-
-def train_net(training_data,batch_size,max_epoch,device,input_size,output_size,net_type):
+def train_net(training_data,batch_size,max_epoch,device,input_size,output_size,net_type,path):
        ul.set_lr_auto()
        accept=0;   
        train_data,validation_data=data_split(training_data,proportion=0.1)
@@ -90,7 +99,7 @@ def train_net(training_data,batch_size,max_epoch,device,input_size,output_size,n
        validation_data= SimDataset(validation_data)
           
        if net_type=="T":
-         path='./models/teacher/'+'nnt'+'.pt'
+         path=path
          neuralNet= TNet(input_size,output_size)
          try: 
            neuralNet.load_state_dict(torch.load(path))       
@@ -100,7 +109,7 @@ def train_net(training_data,batch_size,max_epoch,device,input_size,output_size,n
           print('Randomly initialising weights')
 
        elif net_type=="S":
-         path='./models/student/'+'nns'+'.pt'
+         path=path
          neuralNet= SNet(input_size,output_size)
          try: 
            neuralNet.load_state_dict(torch.load(path))       

@@ -1,8 +1,8 @@
-    rpm_range    = 100:1000;                            % set rpm range(100-1000 RPM)
-    thrust_range = 1000:50000;                          % set required thrust range(1,00-50,000 N)
-    D            = 0.1-2 ;	                        % set propeller diameter [m] (0.1-2 METER)
-    Vs           = 1-10 ;                               % ser ship velocity 1-10 m/s
-    ch=0.5                                              % highest chord/diameter ratio 
+  thrust_range = 1000:50000;                          % set required thrust range(1,00-50,000 N)  
+  Vs           = 1-10 ;                               % ser ship velocity 1-10 m/s  
+  rpm_range    = 100:1000;                            % set rpm range(100-1000 RPM)
+  D            = 0.1-2 ;	                        % set propeller diameter [m] (0.1-2 METER)
+    
 
     %  Blade 2D section properties ----------------------
     cod1= 0.01 : 0.5 ;
@@ -17,3 +17,4 @@
     cod10=0.001        % constant	
 
 
+Data is arranged in column as [ thrust,Vs,rpm,Dia,coD1,CoD2,CoD3,CoD4,CoD5,CoD6,CoD7,CoD8,CoD9,Cod10,efficiency]

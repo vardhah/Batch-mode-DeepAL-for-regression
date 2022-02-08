@@ -32,7 +32,7 @@ class utilities():
 
     def get_lossfunc(self,net_type):
         if net_type=='S':
-            return nn.L1Loss()
+            return nn.MSELoss()
         elif net_type=='T':
             return nn.BCELoss()
 
@@ -108,13 +108,62 @@ def label_data(data,stest_pred):
       data[:,-1]=result
       return data
 
-def choose_samples(test_data,stest_pred,selection_prob):
-      index = np.where(stest_pred> selection_prob)
-      #print('index is:',index[0])
-      return test_data[index[0]]
+def choose_samples_epsilon(pool_data,pool_pred,selection_prob,num_of_samples,epsilon):
+    a_list=np.arange(pool_data.shape[0])
+    #print('pool prediction is:',pool_pred)
+    index = np.where(pool_pred> selection_prob)     # find indices in pool_data which have high probability to fail
+    #print('index of high prob is:',index) 
+    passed_samples_size=len(index[0]) 
+    #print('total high prob samples size are:',passed_samples_size)
+    passed_pool_data=pool_data[index[0]]
+    leftover=np.delete(a_list,index[0])
+    #print('left over samples in pool data are:',leftover)
+    failed_pool_data=pool_data[leftover] 
+    print('size of passed data:',passed_pool_data.shape,'failed pool data:',failed_pool_data.shape)
+    
+    num_of_samples_from_greedy= int(num_of_samples*epsilon)      #find number of samples from being greedy
+    #print('number of greedy samples:',num_of_samples_from_greedy)
+    #if passed sample bucket is greater than number of sample required from greedy approach
+    if passed_samples_size>num_of_samples_from_greedy:
+       #print('++++++', 'In if loop') 
+       selected_samples,pass_pool_leftover=data_split_size(passed_pool_data,num_of_samples_from_greedy)
+       #print('passed pool leftover:',pass_pool_leftover.shape,'selected samples:',selected_samples.shape)
+       pool_data=np.concatenate((pass_pool_leftover,failed_pool_data),axis=0)
+       num_of_random_samples= num_of_samples-selected_samples.shape[0]
+       t_data, rest_pool_data=data_split_size(pool_data,num_of_random_samples)
+       selected_samples= np.concatenate((selected_samples,t_data),axis=0)
+       
+    else: 
+      #print('++++++', 'In else loop') 
+      selected_samples= passed_pool_data
+      num_of_random_samples= num_of_samples-selected_samples.shape[0]
+      #print('number of random_samples:',num_of_random_samples,'no of passed samples:',selected_samples.shape)
+      t_data, rest_pool_data=data_split_size(failed_pool_data,num_of_random_samples)
+      selected_samples= np.concatenate((selected_samples,t_data),axis=0)
+    #print("---->Total selected samples :",selected_samples.shape)
+    return selected_samples,rest_pool_data
+
+
+def choose_topb_samples(pool_data,pool_pred,selection_prob,num_of_samples,epsilon):
+    #print('pool_data shape:',pool_data.shape,'pool_pred shape',pool_pred.shape)
+    pool_data_sorted = pool_data[np.argsort(-1*pool_pred[:, 0])]
+    pool_pred_sorted = pool_pred[np.argsort(-1*pool_pred[:, 0])]
+    a_list=np.arange(pool_data.shape[0])
+    index = np.where(pool_pred> selection_prob)     # find indices in pool_data which have high probability to fail
+    passed_samples_size=len(index[0]) 
+    print('size of passed data:',passed_samples_size)
+    selected_samples= pool_data_sorted[:num_of_samples,:]
+    rest_pool_data = pool_data_sorted[num_of_samples+1:-1,:]
+    print('shape of selected-samples',selected_samples.shape,'shape of rest pool data:',rest_pool_data.shape) 
+    return selected_samples,rest_pool_data
+
+
+def choose_samples_epsilon_diversity(pool_data,pool_pred,selection_prob,num_of_samples,epsilon):
+    return 0
 
 
 def data_split_size(data,size):
+      #on a given dataset return the splitted data=> train_data(based on size),validate_data(leftover)
       a_list=np.arange(data.shape[0])
       np.random.shuffle(a_list)
       alist=a_list[0:size]

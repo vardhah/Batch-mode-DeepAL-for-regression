@@ -40,17 +40,19 @@ class load_N_predict():
 
     def run(self):
       try:
-        model = os.listdir(self.model_loc)
-        #print('model is:',model,'net type is:',self.net_type)
+        #model = os.listdir(self.model_loc)
+        #print('model is:',self.model_loc,'net type is:',self.net_type)
         if self.net_type=='S':
           neuralN=SNet(self.input_size,self.output_size)        
-          model_name=self.model_loc+model[0]
-          #print('model name is:',model_name)
+          #model_name=self.model_loc+model[0]
+          model_name=self.model_loc
+          print('predicting from model:',model_name)
           neuralN.load_state_dict(torch.load(model_name))
         elif self.net_type=='T':
           neuralN=TNet(self.input_size,self.output_size)
-          model_name=self.model_loc+model[0]
-          print('model name is:',model_name)
+          #model_name=self.model_loc+model[0]
+          model_name=self.model_loc
+          print('predicting from model:',model_name)
           neuralN.load_state_dict(torch.load(model_name))
         test_prediction=self.getPrediction(self.test_data,neuralN)
         

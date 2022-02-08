@@ -2,7 +2,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 import torch
 
-HIDDEN1_UNITS = 128
+HIDDEN1_UNITS =128 
 HIDDEN2_UNITS = 64
 HIDDEN3_UNITS = 32
 

@@ -2,11 +2,11 @@ import torch.nn as nn
 import torch.nn.functional as F
 import torch 
 
-HIDDEN1_UNITS = 256
-HIDDEN2_UNITS = 128
-HIDDEN3_UNITS = 64
-HIDDEN4_UNITS = 32
-
+HIDDEN1_UNITS = 512
+HIDDEN2_UNITS = 256
+HIDDEN3_UNITS = 128
+HIDDEN4_UNITS = 64
+HIDDEN5_UNITS = 32
 class SNet(nn.Module):
     def __init__(self, input_size, output_size):
         super().__init__()
@@ -14,7 +14,8 @@ class SNet(nn.Module):
         self.fc2 = nn.Linear(HIDDEN1_UNITS, HIDDEN2_UNITS)
         self.fc3 = nn.Linear(HIDDEN2_UNITS, HIDDEN3_UNITS)
         self.fc4 = nn.Linear(HIDDEN3_UNITS, HIDDEN4_UNITS)
-        self.fc5 = nn.Linear(HIDDEN4_UNITS, output_size)
+        self.fc5 = nn.Linear(HIDDEN4_UNITS, HIDDEN5_UNITS)
+        self.fc6 = nn.Linear(HIDDEN5_UNITS, output_size)
         
     
     def forward(self, x):
@@ -27,4 +28,6 @@ class SNet(nn.Module):
         x = self.fc4(x)
         x = F.relu(x)
         x = self.fc5(x)
+        x = F.relu(x)
+        x = self.fc6(x)
         return x
