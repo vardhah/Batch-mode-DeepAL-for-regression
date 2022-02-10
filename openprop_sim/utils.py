@@ -14,6 +14,8 @@ device = torch.device("cpu")
 from sklearn.preprocessing import OneHotEncoder
 import copy 
 import matplotlib.pyplot as plt
+from sklearn.metrics import pairwise_distances_argmin_min
+from sklearn.cluster import KMeans
 
 
 class utilities():
@@ -144,7 +146,7 @@ def choose_samples_epsilon(pool_data,pool_pred,selection_prob,num_of_samples,eps
     return selected_samples,rest_pool_data
 
 
-def choose_topb_samples(pool_data,pool_pred,selection_prob,num_of_samples,epsilon):
+def choose_topb_samples(pool_data,pool_pred,selection_prob,num_of_samples):
     #print('pool_data shape:',pool_data.shape,'pool_pred shape',pool_pred.shape)
     pool_data_sorted = pool_data[np.argsort(-1*pool_pred[:, 0])]
     pool_pred_sorted = pool_pred[np.argsort(-1*pool_pred[:, 0])]
@@ -153,14 +155,34 @@ def choose_topb_samples(pool_data,pool_pred,selection_prob,num_of_samples,epsilo
     passed_samples_size=len(index[0]) 
     print('size of passed data:',passed_samples_size)
     selected_samples= pool_data_sorted[:num_of_samples,:]
-    rest_pool_data = pool_data_sorted[num_of_samples+1:-1,:]
-    print('shape of selected-samples',selected_samples.shape,'shape of rest pool data:',rest_pool_data.shape) 
-    return selected_samples,rest_pool_data
+    rest_pool_data = pool_data_sorted[num_of_samples:,:]
+    selected_probability= pool_pred_sorted[:num_of_samples,:].flatten()
+    print('shape of selected-samples',selected_samples.shape,'rest pool data:',rest_pool_data.shape,'pool_data:',pool_data.shape) 
+    return selected_samples,rest_pool_data,selected_probability
 
 
-def choose_samples_epsilon_diversity(pool_data,pool_pred,selection_prob,num_of_samples,epsilon):
-    return 0
+def choose_samples_weighted_diversity(data,pred,selection_prob,num_of_beta_samples,num_of_sel_samples):
+    print('beta samples are',num_of_beta_samples,'selcted samples are:',num_of_sel_samples)
+    selected,rejected,weights=choose_topb_samples(data,pred,selection_prob,num_of_beta_samples)
+    print('*******shape of weights:', weights.shape)
+    closest_samples,leftoversamples=kmeancluster_weighted(selected,num_of_sel_samples,weights)
+    total_leftover=np.concatenate((rejected,leftoversamples),axis=0)
+    print('size of in data:',data.shape,'closeset:',closest_samples.shape,'leftover:',total_leftover.shape)
+    return closest_samples,total_leftover
 
+def kmeancluster(X,num_cluster):
+    km = KMeans(n_clusters=num_cluster,init='k-means++').fit(X)
+    closest, _ = pairwise_distances_argmin_min(km.cluster_centers_, X)
+    return closest
+
+def kmeancluster_weighted(X,num_cluster,weights):
+    total_list=np.arange(X.shape[0])
+    km = KMeans(n_clusters=num_cluster,init='k-means++').fit(X[:,:-1],sample_weight = weights)
+    closest, _ = pairwise_distances_argmin_min(km.cluster_centers_, X[:,:-1])   
+    leftover=np.delete(total_list,closest)
+    closest_data= X[closest]
+    left_over_data= X[leftover]
+    return closest_data,left_over_data
 
 def data_split_size(data,size):
       #on a given dataset return the splitted data=> train_data(based on size),validate_data(leftover)

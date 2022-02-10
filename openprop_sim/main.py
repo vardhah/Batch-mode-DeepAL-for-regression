@@ -16,12 +16,15 @@ Axes3D = Axes3D  # pycharm auto import
 import logging
 import shutil
 
-#run=[1,2,3,4,5,6,7,8,9,10]
 run=[1,2,3,4,5,6,7,8,9,10]
+#run=[1,2]
 
 #type of exploration strategy to counter bias introduced by sampling
-# currently testing [e_r_1.0, e_r_0.75, e_r_0.50, e_r_0.25, e_topb,e_greedy]
-strategy= 'e_topb'
+# currently testing [e_r_1.0, e_r_0.75, e_r_0.50, e_r_0.25, e_topb,e_greedy,betaw]
+strategy= 'betaw'
+beta=10
+
+
 
 tl=1000; th=50000;
 rpml=100; rpmh=1000
@@ -47,7 +50,7 @@ optim_factor= 0.1                        # anything between 0 & 1
 input_size=14                             # input size may change if integer/ordinal type variable and represented by one-hot encoding
 num_variable = 14                        # number of variables  both real & int type 
 output_size=1                            # number of output 
-num_iteration=5                       # Number of iteration of sampling
+num_iteration=50                       # Number of iteration of sampling
 budget_samples=50                       # Number of samples-our budget
 ranges=[tl,th,sl,sh,rpml,rpmh,dl,dh,c1,ch,c2,ch,c3,ch,c4,ch,c5,ch,\
           c6,ch,c7,ch,c8,ch,0,1,0,1]                          # ranges in form of [low1,high1,low2,high2,...]
@@ -116,14 +119,15 @@ if __name__ == "__main__":
         epsilon=1.0
      elif strategy=='e_topb':
         epsilon=2.0
-
+     elif strategy=='betaw':
+        beta_samples=beta*budget_samples
      earlier_passed_gt=0
 
      for itr in range(num_iteration):  
       if strategy=='e_greedy':    
          epsilon=epsilon+(1/(num_iteration))
       if itr==0:
-           pool_mesh= np.loadtxt("./data/pool_data_openprop_scaledeff_no_fail_test.csv", delimiter=",",skiprows=0, dtype=np.float32)
+           pool_mesh= np.loadtxt("./data/pool_data_openprop_scaledeff_no_fail.csv", delimiter=",",skiprows=0, dtype=np.float32)
            sim_data, eval_data=data_split_size(pool_mesh,budget_samples)
            print('train size:',sim_data.shape,'eval size:',eval_data.shape)
            
@@ -202,12 +206,20 @@ if __name__ == "__main__":
       lnp=load_N_predict(fitted_eval_mesh,input_size,output_size,teacher_path,'T')
       t_eval_pred=lnp.run() 
       copied_eval_data=np.copy(eval_data)
-      #selected_samples,rest_of_pool_data= choose_samples(copied_eval_data,t_eval_pred,probability_of_selection,budget_samples)
-      if strategy!='e_topb':
-       selected_samples,rest_of_pool_data= choose_samples_epsilon(copied_eval_data,t_eval_pred,probability_of_selection,budget_samples,epsilon)
-      else:
+      
+
+      ########################################################################################################################
+      ##############################  selection strategy  ####################################################################
+      ########################################################################################################################
+      if strategy=='betaw':
+       selected_samples,rest_of_pool_data= choose_samples_weighted_diversity(copied_eval_data,t_eval_pred,probability_of_selection,beta_samples,budget_samples)
+      elif stategy=='e_topb':
        selected_samples,rest_of_pool_data= choose_topb_samples(copied_eval_data,t_eval_pred,probability_of_selection,budget_samples,epsilon)
-      ########################################################################################
+      else:
+        selected_samples,rest_of_pool_data= choose_samples_epsilon(copied_eval_data,t_eval_pred,probability_of_selection,budget_samples,epsilon)
+      
+      #########################################################################################################################
+      #########################################################################################################################
       # simulate on selected samples 
      
       #update all data bases 
