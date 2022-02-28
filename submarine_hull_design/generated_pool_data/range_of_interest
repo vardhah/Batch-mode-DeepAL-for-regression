@@ -12,3 +12,10 @@ Output : maximum (vonmises stress)
 other outputs: check csv files
 
 Goal : to study whether a design will sustain at the depth
+
+
+datafile: 
+ 1. freecad_sim_data_1.csv : Data for first set of experiment(0.95)
+ 2. freecad_simulation_data.csv : Data for first set of experiment(0.997=> 3std) 
+
+ 
