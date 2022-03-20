@@ -1,2 +1,4 @@
-# infinite_space_sampling
-Work towards learning  a sampling strategy in infinitely large state space 
+# Strategic Sampling from design space 
+Work towards learning  a strategic sampling strategy for Deep Learning based surrogate model.
+
+![Alt text](relative/path/to/img.jpg?raw=true "Title")
