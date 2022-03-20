@@ -45,20 +45,18 @@ ch=0.5
 
 
 
-search_itr=5
-optim_factor= 0.1                        # anything between 0 & 1 
-input_size=14                             # input size may change if integer/ordinal type variable and represented by one-hot encoding
-num_variable = 14                        # number of variables  both real & int type 
-output_size=1                            # number of output 
-num_iteration=50                       # Number of iteration of sampling
-budget_samples=50                       # Number of samples-our budget
+search_itr=5                                      # Number of times search for better model
+input_size=14                                     # input size may change if integer/ordinal type variable and represented by one-hot encoding
+output_size=1                                     # number of output 
+num_iteration=50                                  # Number of iteration of sampling
+budget_samples=50                                 # Number of samples-our budget per iteration
 ranges=[tl,th,sl,sh,rpml,rpmh,dl,dh,c1,ch,c2,ch,c3,ch,c4,ch,c5,ch,\
-          c6,ch,c7,ch,c8,ch,0,1,0,1]                          # ranges in form of [low1,high1,low2,high2,...]
+          c6,ch,c7,ch,c8,ch,0,1,0,1]              # ranges in form of [low1,high1,low2,high2,...]
 #init_ranges=[-10,-8,-6.5,-5]
 mask=['real','real','real','real','real','real','real','real','real','real','real','real','real','real']                     # datatype ['dtype1','dtype2']
-random_gridmesh=False                    # (not using now) if state space is pretty big, it is not possible to create a big mesh of samples, in such case for each iteration, we randomly create a biggest possible mesh.       
+random_gridmesh=False                             # (not using now) if state space is pretty big, it is not possible to create a big mesh of samples, in such case for each iteration, we randomly create a biggest possible mesh.       
 categories=[[None],[None],[None],[None],[None],[None],[None],[None],[None],[None],[None],[None],\
-              [None],[None]]               #categories for ordinal variables, 'None' for real variables 
+              [None],[None]]                      #categories for ordinal variables, 'None' for real variables 
 probability_of_selection=0.5
 result=[]
 #logging.basicConfig(level=logging.DEBUG)
@@ -180,9 +178,10 @@ if __name__ == "__main__":
       lnp=load_N_predict(fitted_train_data[:,:-1],input_size,output_size,student_path,'S')
       strain_pred=lnp.run() 
       
-      #########################################################################################
-      #####################ground truth on labeling data ######################################
-      #check and label test data which have failed & passed
+      ##############################################################################################################
+      #####################ground truth on labeling data ###########################################################
+      ########check and label test data which have failed & passed #################################################
+
       copied_train_data=np.copy(train_data)
       copied_test_data=np.copy(test_data)
       total_eval_ip_data= np.concatenate((copied_train_data,copied_test_data),axis=0)
@@ -196,8 +195,9 @@ if __name__ == "__main__":
       print('-----Training teacher net') 
       train_net(fitted_lbtm_data,batch_size,max_epoch,device,input_size,output_size,'T',teacher_path) 
       
-      ####probability prediction by teacher on rest of pool data(eval data) ###################################################
-      #######################################################################################
+      ###################################################################################################################
+      ####probability prediction by teacher on rest of pool data(eval data) #############################################
+      ###################################################################################################################
    
       copied_eval_mesh=np.copy(eval_mesh)
       fitted_eval_mesh= data_preperation(copied_eval_mesh,mask,np.array(ranges),categories)
@@ -219,8 +219,8 @@ if __name__ == "__main__":
         selected_samples,rest_of_pool_data= choose_samples_epsilon(copied_eval_data,t_eval_pred,probability_of_selection,budget_samples,epsilon)
       
       #########################################################################################################################
-      #########################################################################################################################
-      # simulate on selected samples 
+      ################################ simulate on selected samples ###########################################################
+      ######################################################################################################################### 
      
       #update all data bases 
       sim_data= np.concatenate((sim_data,selected_samples),axis=0)
