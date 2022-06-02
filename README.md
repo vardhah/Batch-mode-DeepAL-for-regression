@@ -23,8 +23,8 @@ For empirical evalution,we selected two different engineering design doamins:
    ![General Active learning Strategy](./images/hull_surrogatewithout_line.png)
 
 
-### Data :
-The dataset can be downloaded from here:
+### Data and Trained models:
+The dataset and trained models can be downloaded from [here](https://drive.google.com/drive/folders/1rYjyHzgEVD3UibIQh1WbA4lPq7Ae1av2?usp=sharing). 
 
 
 ### Directory and codes:
@@ -45,7 +45,6 @@ The dataset can be downloaded from here:
 
 ### Dependencies :
 The source code is written in pytorch and tested on Ubuntu 21.04 hirsute. Apart form python packages , we used open-source numerical simulation tool mentioned below:   
- - OpenProp - propeller simulation tool,OpenProp is a suite of open-sourced propeller and turbine design codes written in the MATLAB R programming language . The codes are based on the same lifting line propeller
-design theory utilized in codes employed by the US Navy for preliminary parametric design of marine propellers. click [here](https://openprop.engineering.dartmouth.edu/) to read about it and download.
+ - OpenProp - OpenProp is a suite of open-sourced propeller and turbine design codes written in the MATLAB programming language . The codes are based on the same lifting line propeller design theory utilized in codes employed by the US Navy for preliminary parametric design of marine propellers. click [here](https://openprop.engineering.dartmouth.edu/) to read more about it and download the software.
 
- - FreeCAD : Open soruce CAD modeling tool, click [here](https://www.freecadweb.org/) to read about it and download.
+ - FreeCAD : Open source CAD modeling tool, click [here](https://www.freecadweb.org/) to read about it and download.
