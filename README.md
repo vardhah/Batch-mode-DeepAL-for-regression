@@ -1,6 +1,9 @@
 
 ![General Active learning Strategy](./images/bird.png)
 
+### Evolution of student and teacher network in Active Learning iterations
+![General Active learning Strategy](./images/evolution_st_bird.png)
+
 # Strategic Sampling from design space for Deep Learning based surrogate models
 This folder consist of codes and results of experimentation towards AI based strategic sampling strategy for Deep Learning based surrogate model. General approach of strategic sampling has long history and this heuristic based field of research is called 'Active learning'. The general approach of active learning and motivation is below.
 
