@@ -1,3 +1,6 @@
+
+![General Active learning Strategy](./images/bird.png)
+
 # Strategic Sampling from design space for Deep Learning based surrogate models
 This folder consist of codes and results of experimentation towards AI based strategic sampling strategy for Deep Learning based surrogate model. General approach of strategic sampling has long history and this heuristic based field of research is called 'Active learning'. The general approach of active learning and motivation is below.
 
@@ -24,7 +27,7 @@ For empirical evalution,we selected two different engineering design doamins:
 
 
 ### Data and Trained models:
-The dataset and trained models can be downloaded from [here](https://drive.google.com/drive/folders/1rYjyHzgEVD3UibIQh1WbA4lPq7Ae1av2?usp=sharing). 
+The dataset and trained models can be downloaded from [here](https://drive.google.com/drive/folders/1rYjyHzgEVD3UibIQh1WbA4lPq7Ae1av2?usp=sharing).
 
 
 ### Directory and codes:
